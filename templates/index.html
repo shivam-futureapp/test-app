@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cost Estimation</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 0;
+        }
+
+        .container {
+            max-width: 600px;
+            margin: 20px auto;
+            padding: 20px;
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        h1 {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        form {
+            text-align: center;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 10px;
+        }
+
+        input[type="text"],
+        select {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 20px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            box-sizing: border-box;
+        }
+
+        input[type="submit"] {
+            background-color: #4CAF50;
+            color: white;
+            padding: 14px 20px;
+            margin: 8px 0;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            width: 100%;
+        }
+
+        input[type="submit"]:hover {
+            background-color: #45a049;
+        }
+
+        .result {
+            margin-top: 20px;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>AWS Global Accelerator Cost Estimation</h1>
+        <form method="POST">
+            <label for="data_transfer">Data Transfer (GB):</label>
+            <input type="text" name="data_transfer" id="data_transfer"><br>
+            <label for="source">Source:</label>
+            <select name="source" id="source">
+                <option value="United States & Canada">United States & Canada</option>
+                <option value="Europe & Israel">Europe & Israel</option>
+                <option value="Asia Pacific*">Asia Pacific*</option>
+                <option value="South Korea">South Korea</option>
+                <option value="India, Philippines, Thailand & Vietnam">India, Philippines, Thailand & Vietnam</option>
+                <option value="Australia & New Zealand">Australia & New Zealand</option>
+                <option value="Middle East">Middle East</option>
+                <option value="South America">South America</option>
+                <option value="South Africa, Kenya & Nigeria">South Africa, Kenya & Nigeria</option>
+            </select><br>
+            <label for="destination">Destination:</label>
+            <select name="destination" id="destination">
+                <option value="United States & Canada">United States & Canada</option>
+                <option value="Europe & Israel">Europe & Israel</option>
+                <option value="Asia Pacific*">Asia Pacific*</option>
+                <option value="South Korea">South Korea</option>
+                <option value="India, Philippines, Thailand & Vietnam">India, Philippines, Thailand & Vietnam</option>
+                <option value="Australia & New Zealand">Australia & New Zealand</option>
+                <option value="Middle East">Middle East</option>
+                <option value="South America">South America</option>
+                <option value="South Africa, Kenya & Nigeria">South Africa, Kenya & Nigeria</option>
+            </select><br>
+            <input type="submit" value="Calculate Cost">
+        </form>
+        {% if monthly_cost %}
+        <div class="result">Monthly cost estimate: ${{monthly_cost}}</div>
+        {% endif %}
+    </div>
+</body>
+</html>
