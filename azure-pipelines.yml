@@ -1,4 +1,15 @@
 # Python to Linux Web App on Azure
+- task: AzureRmWebAppDeployment@4
+  inputs:
+    ConnectionType: 'AzureRM'
+    azureSubscription: 'Free Trial(30480133-5647-4971-ae95-37070ce1148c)'
+    appType: 'webAppLinux'
+    WebAppName: 'redhatmoon'
+    deployToSlotOrASE: true
+    ResourceGroupName: 'DefaultResourceGroup-EUS'
+    SlotName: 'production'
+    packageForLinux: '$(System.DefaultWorkingDirectory)/**/*.zip'
+    RuntimeStack: 'PYTHON|3.10'
 # Build your Python project and deploy it to Azure as a Linux Web App.
 # Change python version to one thats appropriate for your application.
 # https://docs.microsoft.com/azure/devops/pipelines/languages/python
