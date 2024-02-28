@@ -1,5 +1,3 @@
-
-
 trigger:
   - master  # Indentation fixed
 
@@ -78,7 +76,7 @@ stages:
                 - task: AzureWebApp@1
                   displayName: Deploy Azure Web App
                   inputs:
-                    azureSubscription: '30480133-5647-4971-ae95-37070ce1148c'
+                    azureSubscription: 'testc'
                     appName: $(webAppName)
                     package: $(Pipeline.Workspace)/drop/$(Build.BuildId).zip
 
