@@ -1,98 +1,83 @@
-# Python to Linux Web App on Azure
-- task: AzureRmWebAppDeployment@4
-  inputs:
-    ConnectionType: 'AzureRM'
-    azureSubscription: 'Free Trial(30480133-5647-4971-ae95-37070ce1148c)'
-    appType: 'webAppLinux'
-    WebAppName: 'redhatmoon'
-    deployToSlotOrASE: true
-    ResourceGroupName: 'DefaultResourceGroup-EUS'
-    SlotName: 'production'
-    packageForLinux: '$(System.DefaultWorkingDirectory)/**/*.zip'
-    RuntimeStack: 'PYTHON|3.10'
-# Build your Python project and deploy it to Azure as a Linux Web App.
-# Change python version to one thats appropriate for your application.
-# https://docs.microsoft.com/azure/devops/pipelines/languages/python
+# Build and deploy Python project to Azure Linux Web App
 
 trigger:
-- master
+  - master
 
 variables:
-  # Azure Resource Manager connection created during pipeline creation
+  # Azure service connection for deployment
   azureServiceConnectionId: 'd70fdf7f-2c6e-456b-aca9-b188b0280394'
 
   # Web app name
   webAppName: 'linux-web-jahapp'
 
-  # Agent VM image name
-  vmImageName: 'ubuntu-latest'
+  # Linux agent image for build job
+  linuxAgentImage: 'ubuntu-latest'
 
   # Environment name
   environmentName: 'linux-web-jahapp'
 
-  # Project root folder. Point to the folder containing manage.py file.
+  # Project root folder (containing manage.py)
   projectRoot: $(System.DefaultWorkingDirectory)
 
-  # Python version: 3.7
+  # Python version
   pythonVersion: '3.7'
 
 stages:
-- stage: Build
-  displayName: Build stage
-  jobs:
-  - job: BuildJob
-    pool:
-      vmImage: $(vmImageName)
-    steps:
-    - task: UsePythonVersion@0
-      inputs:
-        versionSpec: '$(pythonVersion)'
-      displayName: 'Use Python $(pythonVersion)'
-
-    - script: |
-        python -m venv antenv
-        source antenv/bin/activate
-        python -m pip install --upgrade pip
-        pip install setup
-        pip install -r requirements.txt
-      workingDirectory: $(projectRoot)
-      displayName: "Install requirements"
-
-    - task: ArchiveFiles@2
-      displayName: 'Archive files'
-      inputs:
-        rootFolderOrFile: '$(projectRoot)'
-        includeRootFolder: false
-        archiveType: zip
-        archiveFile: $(Build.ArtifactStagingDirectory)/$(Build.BuildId).zip
-        replaceExistingArchive: true
-
-    - upload: $(Build.ArtifactStagingDirectory)/$(Build.BuildId).zip
-      displayName: 'Upload package'
-      artifact: drop
-
-- stage: Deploy
-  displayName: 'Deploy Web App'
-  dependsOn: Build
-  condition: succeeded()
-  jobs:
-  - deployment: DeploymentJob
-    pool:
-      vmImage: $(vmImageName)
-    environment: $(environmentName)
-    strategy:
-      runOnce:
-        deploy:
-          steps:
-
+  - stage: Build
+    displayName: Build Stage
+    jobs:
+      - job: BuildJob
+        pool:
+          vmImage: $(linuxAgentImage)
+        steps:
           - task: UsePythonVersion@0
+            displayName: Use Python $(pythonVersion)
             inputs:
-              versionSpec: '$(pythonVersion)'
-            displayName: 'Use Python version'
+              versionSpec: $(pythonVersion)
 
-          - task: AzureWebApp@1
-            displayName: 'Deploy Azure Web App : linux-web-jahapp'
+          - script: |
+              python -m venv antenv
+              source antenv/bin/activate
+              python -m pip install --upgrade pip
+              pip install setup.py
+              pip install -r requirements.txt
+            workingDirectory: $(projectRoot)
+            displayName: Install requirements
+
+          - task: ArchiveFiles@2
+            displayName: Archive files
             inputs:
-              azureSubscription: $(azureServiceConnectionId)
-              appName: $(webAppName)
-              package: $(Pipeline.Workspace)/drop/$(Build.BuildId).zip
+              rootFolderOrFile: $(projectRoot)
+              includeRootFolder: false
+              archiveType: zip
+              archiveFile: $(Build.ArtifactStagingDirectory)/$(Build.BuildId).zip
+              replaceExistingArchive: true
+
+          - upload: $(Build.ArtifactStagingDirectory)/$(Build.BuildId).zip
+            displayName: Upload package
+            artifact: drop
+
+  - stage: Deploy
+    displayName: Deploy Web App
+    dependsOn: Build
+    condition: succeeded()
+    jobs:
+      - deployment: DeploymentJob
+        pool:
+          vmImage: $(linuxAgentImage)
+        environment: $(environmentName)
+        strategy:
+          runOnce:
+            deploy:
+              steps:
+                - task: UsePythonVersion@0
+                  displayName: Use Python version
+                  inputs:
+                    versionSpec: $(pythonVersion)
+
+                - task: AzureWebApp@1
+                  displayName: Deploy Azure Web App
+                  inputs:
+                    azureSubscription: $(azureServiceConnectionId)
+                    appName: $(webAppName)
+                    package: $(Pipeline.Workspace)/drop/$(Build.BuildId).zip
