@@ -1,4 +1,12 @@
 # Build and deploy Python project to Azure Linux Web App 
+- task: AzureRmWebAppDeployment@4
+  inputs:
+    ConnectionType: 'AzureRM'
+    azureSubscription: 'redhatmoon'
+    appType: 'webAppLinux'
+    WebAppName: 'redhatmoon'
+    packageForLinux: '$(System.DefaultWorkingDirectory)/**/*.zip'
+    RuntimeStack: 'PYTHON|3.11'
 
 trigger:
   - master  # Indentation fixed
