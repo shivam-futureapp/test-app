@@ -51,7 +51,7 @@ stages:
     - task: AzureCLI@2
       displayName: 'Deploy to Azure Container App (with port)'
       inputs:
-        azureSubscription: 'my-service-connection' 
+        azureSubscription: 'myconnect' 
         scriptType: bash 
         scriptLocation: inlineScript  
         inlineScript: |
