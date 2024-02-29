@@ -5,7 +5,7 @@ pool:
   vmImage: 'ubuntu-latest' 
 
 variables:
-  imageName: 'shivamspace/$(Build.Repository.Name):$(Build.BuildId)' # For Docker Hub
+  imageName: 'shivamspace/$(Build.Repository.Name):$(Build.BuildId)' 
   dockerHubUsername: 'shivamspace'
   dockerHubPassword: 'Redhat@3439' 
 
@@ -20,8 +20,8 @@ stages:
       displayName: 'Login to Docker Hub'
       inputs:
         command: login
-        containerRegistry: docker.io 
-        repository: '' # No repository needed for login
+        containerRegistry: 'dockerconnection'  # Use your service connection name
+        repository: '' 
         username: $(dockerHubUsername)
         password: $(dockerHubPassword)
 
