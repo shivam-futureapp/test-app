@@ -3,8 +3,7 @@ trigger:
 
 variables:
   # Azure service connection for deployment
-  azureServiceConnectionId: 'd70fdf7f-2c6e-456b-aca9-b188b0280394'
-
+  azureServiceConnection: 'testc'
   # Web app name
   webAppName: 'linux-web-jahapp'
 
