@@ -7,7 +7,7 @@ pool:
 variables:
   imageName: 'shivamspace/$(Build.Repository.Name):$(Build.BuildId)' 
   dockerHubUsername: 'shivamspace'
-  dockerHubPassword: 'Redhat@3439' 
+  dockerHubPassword: 'Jaya@3439' 
 
 stages:
 - stage: Build
